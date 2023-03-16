@@ -32,7 +32,7 @@ class DrawingView(context: Context, attribute: AttributeSet):
     private var mDrawPaint: Paint? = null
     private var mCanvasPaint: Paint? = null
     //after adding the function we select brushsize from MainActivity
-    private var mBrushSize: Float = 5.toFloat()
+    private var mBrushSize: Float = 8.toFloat()
     private var mColor = Color.BLACK
     private var mCanvas: Canvas? = null
 
@@ -95,7 +95,7 @@ class DrawingView(context: Context, attribute: AttributeSet):
          */
         mCanvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
 
-        //We have our bitmap and configured it using Bitmap.Config
+          //We have our bitmap and configured it using Bitmap.Config
         //Now we will create a canvas object
         mCanvas = Canvas(mCanvasBitmap!!)
     }
@@ -139,18 +139,15 @@ class DrawingView(context: Context, attribute: AttributeSet):
          */
         when(event?.action) {
             MotionEvent.ACTION_DOWN -> {
+                mDrawPath?.reset()
                 mDrawPath?.color = mColor
                 mDrawPath?.brushThickness = mBrushSize
-                mDrawPath?.reset()
-
-                if (touchX != null && touchY != null) {
-                    mDrawPath!!.moveTo(touchX, touchY)
-                }
             }
 
             MotionEvent.ACTION_MOVE -> {
                 if (touchX != null && touchY != null) {
                     mDrawPath?.lineTo(touchX, touchY)
+                    invalidate()
                 }
             }
 
@@ -163,7 +160,7 @@ class DrawingView(context: Context, attribute: AttributeSet):
             else -> return false
         }
 
-        invalidate()
+//        invalidate()
         return true
     }
 

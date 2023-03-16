@@ -1,0 +1,33 @@
+private fun saveToStorage(bitmap: Bitmap)
+    {
+        val imageName = "DrawingCanvas_${System.currentTimeMillis()}.jpeg"
+        var fileOut: OutputStream? = null
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        {
+            this.contentResolver?.also {
+                resolver ->
+                val contentValue = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, imageName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+
+                val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValue)
+                fileOut = imageUri?.let {
+                    resolver.openOutputStream(it)
+                }
+            }
+        }
+        else
+        {
+            val imageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val image = File(imageDir, imageName)
+            fileOut = FileOutputStream(image)
+        }
+
+        fileOut?.use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+        }
+    }
