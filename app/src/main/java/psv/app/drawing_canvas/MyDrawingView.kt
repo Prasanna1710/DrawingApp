@@ -20,6 +20,16 @@ class MyDrawingView(context: Context, attributes: AttributeSet): View(context, a
 
     }
 
+    /*
+    a Bitmap is an image that is stored in memory,
+    while a Canvas is a drawing surface that allows you to draw onto a Bitmap or a View.
+    with the help off paint class we can determine what color the drawing have, what brushThickness etc
+
+    To create a custom drawing view we need following
+    Canvas Object, Bitmap on which we want to draw canvas
+    a customPath to draw paths onto canvas
+    a paint object to configure paint color, brush size, stroke style etc
+     */
     private lateinit var myCanvas: Canvas
     private lateinit var myBitmap: Bitmap
     private lateinit var myPath: CustomPath
@@ -58,6 +68,10 @@ class MyDrawingView(context: Context, attributes: AttributeSet): View(context, a
         myPath = CustomPath(drawColor, strokeSize)
     }
 
+    /*
+    This is called during layout when the size of this view has changed.
+    If you were just added to the view hierarchy, you're called with the old values of 0
+     */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
@@ -65,10 +79,17 @@ class MyDrawingView(context: Context, attributes: AttributeSet): View(context, a
         myCanvas = Canvas(myBitmap)
     }
 
+    /*
+    This determines what happens when we draw on the canvas
+     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(myBitmap, 0f, 0f, canvasPaint)
 
+        /*
+        We use pathlist so as to use the undo functionality in future
+        it also helps in making lines persist on view
+         */
         for(path in myPathList)
         {
             drawPaint.strokeWidth = path.brushSize
